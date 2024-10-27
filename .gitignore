@@ -1,0 +1,5 @@
+!default.conf
+.env
+*.zip
+*.json
+*.conf
