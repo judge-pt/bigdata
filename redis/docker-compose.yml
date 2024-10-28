@@ -9,7 +9,20 @@ services:
       - infra
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
-      
+  
+  flower:
+    image: mher/flower:latest  # Usando a última versão da imagem Flower
+    container_name: flower
+    restart: always
+    ports:
+      - "${FLOWER_EXTERNAL_PORT:-5555}:5555"  # Porta externa configurável
+    networks:
+      - infra
+    environment:
+      - FLOWER_BASIC_AUTH=${FLOWER_BASIC_AUTH:-admin:admin}  # Autenticação básica com credenciais padrão
+    command: >
+      celery flower --broker=redis://redis:6379 --port=5555
+
 networks:
   infra:
     external: true
