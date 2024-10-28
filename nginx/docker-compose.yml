@@ -1,10 +1,10 @@
-version: '3.7'
-
 services:
   nginx:
     image: nginx:latest
     container_name: nginx
     volumes:
+      - /run:/run
+      - /opt:/opt
       - ./nginx-conf:/etc/nginx/conf.d
     ports:
       - "80:80"
