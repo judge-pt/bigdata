@@ -1,0 +1,15 @@
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: redis
+    restart: always
+    ports:
+      - '${REDIS_EXTERNAL_PORT:-6379}:6379'
+    networks:
+      - infra
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      
+networks:
+  infra:
+    external: true
