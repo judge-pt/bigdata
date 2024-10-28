@@ -1,6 +1,7 @@
 services:
   certbot:
     image: certbot/certbot
+    container_name: certbot
     volumes:
       - ./certs:/etc/letsencrypt
       - ./certs_data:/data/letsencrypt
