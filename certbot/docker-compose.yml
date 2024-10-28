@@ -1,0 +1,15 @@
+services:
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - ./certs_data:/data/letsencrypt
+      - ./../nginx-conf:/etc/nginx/conf.d 
+    networks:
+      - infra
+    restart: always
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+networks:
+  infra:
+    external: true
