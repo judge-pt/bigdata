@@ -1,19 +1,26 @@
 services:
   nginx:
-    image: nginx:latest
+    image: jonasal/nginx-certbot:latest
     container_name: nginx
+    environment:
+      - CERTBOT_EMAIL
+    env_file:
+      - .env
     volumes:
       - /run:/run
       - /opt:/opt
-      - ./nginx-conf:/etc/nginx/conf.d
-      - ../certbot/certs:/etc/letsencrypt
+      - nginx_secrets:/etc/letsencrypt   
+      - ./nginx-conf:/etc/nginx/user_conf.d
     ports:
       - "80:80"
       - "443:443"
     networks:
       - infra
-    restart: always
+    restart: unless-stopped
 
 networks:
   infra:
     external: true
+
+volumes:
+  nginx_secrets:
