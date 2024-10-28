@@ -6,6 +6,7 @@ services:
       - /run:/run
       - /opt:/opt
       - ./nginx-conf:/etc/nginx/conf.d
+      - ../certbot/certs:/etc/letsencrypt
     ports:
       - "80:80"
       - "443:443"
