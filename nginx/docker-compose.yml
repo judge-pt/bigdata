@@ -11,7 +11,6 @@ services:
       - /opt:/opt
       - nginx_secrets:/etc/letsencrypt
       - ./nginx-conf:/etc/nginx/user_conf.d
-      - ./entrypoint.sh:/usr/local/bin/nginx-entrypoint.sh
       - ./webroot:/var/www/certbot
     ports:
       - "80:80"
@@ -19,7 +18,6 @@ services:
     networks:
       - infra
     restart: unless-stopped
-    entrypoint: ["/bin/bash", "/usr/local/bin/nginx-entrypoint.sh"]
 
 networks:
   infra:
