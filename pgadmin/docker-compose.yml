@@ -1,0 +1,25 @@
+services:
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - "${PGADMIN_EXTERNAL_PORT:-5050}:80"
+    networks:
+      - infra
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@local.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - pgadmin-servers:/servers
+
+volumes:
+  pgadmin-data:
+  pgadmin-servers:
+
+networks:
+  infra:
+    external: true
