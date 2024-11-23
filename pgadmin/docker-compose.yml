@@ -16,9 +16,27 @@ services:
       - pgadmin-data:/var/lib/pgadmin
       - pgadmin-servers:/servers
 
+  datahub:
+    image: postgres:17.2
+    container_name: datahub
+    restart: always
+    ports:
+      - "${DATAHUB_EXTERNAL_PORT:-5432}:5432"
+    networks:
+      - infra
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-datahub}
+    volumes:
+      - datahub-data:/var/lib/postgresql/data
+    depends_on:
+      - pgadmin
+    
 volumes:
   pgadmin-data:
   pgadmin-servers:
+  datahub-data:
 
 networks:
   infra:
