@@ -12,8 +12,8 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
-      - POSTGRES_NON_ROOT_USER
-      - POSTGRES_NON_ROOT_PASSWORD
+#      - POSTGRES_NON_ROOT_USER
+#      - POSTGRES_NON_ROOT_PASSWORD
     volumes:
       - db_storage:/var/lib/postgresql/data
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
@@ -30,14 +30,19 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
-    command: start --tunnel
+    command: start
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
-      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
-      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - DB_POSTGRESDB_USER=${POSTGRES_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_ROOT_PASSWORD}
+      - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE}
+      - N8N_PROTOCOL=https
+      - N8N_HOST=workflow.2code.com.br
+      - N8N_PORT=5678
+      - WEBHOOK_URL=https://workflow.2code.com.br/
     ports:
       - 5678:5678
     links:
@@ -47,3 +52,16 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  waha:
+    image: devlikeapro/waha:latest
+    restart: always
+    ports:
+     - 3000:3000
+    environment:
+      - WHATSAPP_DEFAULT_ENGINE=NOWEB
+      - WHATSAPP_HOOK_EVENTS=message
+      - WHATSAPP_HOOK_URL=https://workflow.2code.com.br/webhook-test/9b7d11d9-ac47-4748-a5d2-59c03ec15743/waha
+      - WAHA_DASHBOARD_USERNAME=admin2code
+    volumes:
+      - ./waha-temp:/tmp/
